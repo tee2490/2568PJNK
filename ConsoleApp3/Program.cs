@@ -29,6 +29,7 @@ do
             genData.AddProduct();
             break;
         case 3:
+            genData.EditProduct();
             break;
         case 4:
             break;

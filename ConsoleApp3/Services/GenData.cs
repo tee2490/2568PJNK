@@ -64,6 +64,40 @@ namespace ConsoleApp3.Services
             Show(products);
         }
 
+        public void EditProduct()
+        {
+            Console.Clear();
+            Console.WriteLine("=== แก้ไขสินค้า ===");
+            Show(products);
+
+            Console.Write("กรอก ID ที่ต้องการแก้ไข: ");
+            int id = int.Parse(Console.ReadLine());
+
+            // หา Product
+            var p = products.FirstOrDefault(x => x.Id == id);
+
+            if (p == null)
+            {
+                Console.WriteLine("ไม่พบสินค้า");
+                return;
+            }
+
+            Console.WriteLine($"สินค้าเดิม: {p.Id} {p.Name} {p.Category} {p.Price}");
+
+            Console.Write("Name: ");
+            p.Name = Console.ReadLine();
+
+            Console.WriteLine("Category (0=Drink, 1=Food, 2=General, 3=Cloth)");
+            Console.Write("เลือกหมวด: ");
+            int catChoice = int.TryParse(Console.ReadLine(), out int c) && c is >= 0 and <= 3 ? c : 0;
+            p.Category = (Category)catChoice;
+
+            Console.Write("Price: ");
+            p.Price = Math.Round(double.Parse(Console.ReadLine()), 2);
+
+            Console.WriteLine("\nแก้ไขข้อมูลเรียบร้อย");
+            Show(products);
+        }
 
 
 
