@@ -99,6 +99,28 @@ namespace ConsoleApp3.Services
             Show(products);
         }
 
+        public void DeleteProduct()
+        {
+            Console.Clear();
+            Console.WriteLine("=== ลบสินค้า ===");
+            Show(products);
+
+            Console.Write("กรอก ID ที่ต้องการลบ: ");
+            int id = int.Parse(Console.ReadLine());
+
+            var p = products.FirstOrDefault(x => x.Id == id);
+
+            if (p == null)
+            {
+                Console.WriteLine("ไม่พบสินค้า");
+                return;
+            }
+
+            products.Remove(p);
+
+            Console.WriteLine("ลบข้อมูลเรียบร้อย\n");
+            Show(products);
+        }
 
 
     }

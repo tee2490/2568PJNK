@@ -32,6 +32,7 @@ do
             genData.EditProduct();
             break;
         case 4:
+            genData.DeleteProduct();
             break;
         case 5:
             Console.WriteLine("ออกจากโปรแกรม...");
