@@ -58,7 +58,7 @@ namespace ConsoleApp1.Services
 
         public void ShowByCategory()
         {
-            var groups = products
+         var groups = products
         .OrderBy(p => p.Category)
         .ThenBy(p => p.Id)
         .GroupBy(p => p.Category);

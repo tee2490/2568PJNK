@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-Console.OutputEncoding = System.Text.Encoding.UTF8;
+﻿Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.InputEncoding = System.Text.Encoding.UTF8;
+
 // ------------------------------
 // Part 1 : สุ่มสินค้า
 // ------------------------------
@@ -11,19 +9,20 @@ Random rand = new Random();
 // สุ่มจำนวนสินค้า 10–15
 int N = rand.Next(10, 16);
 
-string[] categories = ["Drink", "Food", "General", "Cloth"];
+// เตรียมค่าของ enum สำหรับสุ่มประเภทสินค้า
+CategoryType[] categoryValues = (CategoryType[])Enum.GetValues(typeof(CategoryType));
 
-List<Item> products = [];
+List<Item> products = new();
 
 for (int i = 1; i <= N; i++)
 {
-    double price = rand.NextDouble() * (30.0 - 10.0) + 10.0;
+    double price = rand.Next(10,16)+ rand.NextDouble();
 
     products.Add(new Item(
         ID: i,
         Name: $"PRODUCT{i}",
-        Category: categories[rand.Next(categories.Length)],
-        Price: Math.Round(price, 2)
+        Category: categoryValues[rand.Next(categoryValues.Length)],
+        Price: Math.Round(price, 2)   // ปัดทศนิยม 2 ตำแหน่ง
     ));
 }
 
@@ -39,7 +38,7 @@ Console.WriteLine("\n===== รายงาน 1 : สินค้าราคา
 double maxPrice = products.Max(p => p.Price);
 
 var topItems = products.Where(p => p.Price == maxPrice)
-                       .OrderByDescending(p => p.Price);
+                       .OrderBy(p => p.ID);
 
 PrintTable(topItems);
 
@@ -51,7 +50,7 @@ Console.WriteLine("\n===== รายงาน 2 : สินค้าราคา
 double minPrice = products.Min(p => p.Price);
 
 var lowItems = products.Where(p => p.Price == minPrice)
-                       .OrderBy(p => p.Price);
+                       .OrderBy(p => p.ID);
 
 PrintTable(lowItems);
 
@@ -70,7 +69,6 @@ foreach (var g in groups)
     Console.WriteLine();
 }
 
-
 // ===================================================
 // Part 2 : สุ่มออเดอร์จากลูกค้า
 // ===================================================
@@ -88,9 +86,6 @@ Console.WriteLine();
 
 // เก็บสินค้าทั้งหมดที่ถูกขาย (ทุกรายการ ทุกออเดอร์)
 List<Item> allSoldItems = new();
-
-// เก็บยอดขายสุทธิของแต่ละออเดอร์ เพื่อนำมาหา Average ใน Part 3
-double totalNetAllOrders = 0.0;
 
 for (int orderNo = 1; orderNo <= A; orderNo++)
 {
@@ -126,7 +121,6 @@ for (int orderNo = 1; orderNo <= A; orderNo++)
     }
 
     double net = sum - discount;
-    totalNetAllOrders += net;
 
     Console.WriteLine($"Order No.{orderNo}:");
     PrintOrderTable(orderItems);
@@ -136,7 +130,6 @@ for (int orderNo = 1; orderNo <= A; orderNo++)
     Console.WriteLine($"Net      = {net:F2}");
     Console.WriteLine();
 }
-
 
 // ===================================================
 // Part 3 : สรุปรายงานการขายทั้งหมด
@@ -149,23 +142,19 @@ if (allSoldItems.Count == 0)
 }
 else
 {
-    // รวมยอดขายต่อสินค้าแต่ละตัว
     var soldSummary = allSoldItems
         .GroupBy(p => p.ID)
         .Select(g => new
         {
             Product = g.First(),
-            Num = g.Count(),                 // จำนวนที่ขายได้
-            Total = g.Sum(x => x.Price)      // มูลค่ารวม (ไว้เผื่อใช้)
+            Num = g.Count(),
+            Total = g.Sum(x => x.Price)
         })
         .ToList();
 
-    // ---------------------------
     // 1. สินค้าที่ขายดีที่สุด (จำนวนชิ้นมากที่สุด)
-    // ---------------------------
     var mostSold = soldSummary
         .OrderByDescending(x => x.Num)
-        .ThenBy(x => x.Product.ID)
         .First();
 
     Console.WriteLine("1. สินค้าที่ขายดีที่สุด และจำนวนที่ขายได้\n");
@@ -174,12 +163,9 @@ else
         $"{mostSold.Product.ID}\t{mostSold.Product.Name}\t{mostSold.Product.Category}\t{mostSold.Product.Price:F2}\t{mostSold.Num}");
     Console.WriteLine();
 
-    // ---------------------------
-    // 2. สินค้าที่ 'ราคาต่อหน่วย' แพงที่สุด และขายได้กี่ชิ้น
-    // ---------------------------
+    // 2. สินค้าที่ราคาต่อหน่วยแพงที่สุด และขายได้กี่ชิ้น
     var highestPriceProduct = soldSummary
         .OrderByDescending(x => x.Product.Price)
-        .ThenBy(x => x.Product.ID)
         .First();
 
     Console.WriteLine("2. สินค้าที่มีราคาต่อหน่วยแพงที่สุด และขายได้จำนวนเท่าไร\n");
@@ -188,13 +174,10 @@ else
         $"{highestPriceProduct.Product.ID}\t{highestPriceProduct.Product.Name}\t{highestPriceProduct.Product.Category}\t{highestPriceProduct.Product.Price:F2}\t{highestPriceProduct.Num}");
     Console.WriteLine();
 
-    // ---------------------------
-    // 3. ราคาขายเฉลี่ยของรายการขายทั้งหมด
-    //    ตามตัวอย่าง = ยอดขายสุทธิรวม / จำนวนลูกค้า (A)
-    // ---------------------------
-    double sumAll = totalNetAllOrders;   // ใช้ยอดขายสุทธิรวมทุกออเดอร์
-    int countOrders = A;                 // จำนวนออเดอร์ = จำนวนลูกค้า
-    double avgAll = countOrders > 0 ? sumAll / countOrders : 0.0;
+    // 3. ราคาขายเฉลี่ยของรายการขายทั้งหมด (ยอดสุทธิรวม / จำนวนลูกค้า)
+    double sumAll = allSoldItems.Sum(p=>p.Price);
+    int countOrders = A;
+    double avgAll = allSoldItems.Average(p=>p.Price);
 
     Console.WriteLine("3. ราคาขายเฉลี่ยของรายการขายทั้งหมด\n");
     Console.WriteLine($"Sum = {sumAll:F2}, Count = {countOrders}, Average = {avgAll:F2}");
@@ -229,6 +212,14 @@ void PrintOrderTable(IEnumerable<Item> items)
 }
 
 // ------------------------------
-// ต้องวาง record ไว้ท้ายไฟล์
+// ต้องวาง type ไว้ท้ายไฟล์เมื่อใช้ top-level statements
 // ------------------------------
-record Item(int ID, string Name, string Category, double Price);
+record Item(int ID, string Name, CategoryType Category, double Price);
+
+enum CategoryType
+{
+    Drink,
+    Food,
+    General,
+    Cloth
+}
