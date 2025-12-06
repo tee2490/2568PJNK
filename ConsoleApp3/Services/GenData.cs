@@ -16,7 +16,7 @@ namespace ConsoleApp3.Services
             {
                 Category category = (Category)rand.Next(Enum.GetNames(typeof(Category)).Length);
                 double price = rand.Next(10, 31) + rand.NextDouble();
-                price = Math.Round(price,0);
+                price = Math.Round(price,1);
 
                 products.Add(new Product(i, category, price));
             }
@@ -130,7 +130,8 @@ namespace ConsoleApp3.Services
             Console.WriteLine("2. จัดกลุ่มตาม Category");
             Console.WriteLine("3. สินค้าที่มีราคาสูงที่สุด");
             Console.WriteLine("4. แสดงรายการสินค้าที่มีราคาสูงที่สุด 3 ราคา");
-            Console.Write("เลือกเมนู (1-4): ");
+            Console.WriteLine("5. แสดงรายการสินค้าราคา 3 ช่วง 10-15.99 | 16-20.99 | >17");
+            Console.Write("เลือกเมนู (1-5): ");
 
             int choice = int.TryParse(Console.ReadLine(), out int c) ? c : 0;
 
@@ -152,6 +153,10 @@ namespace ConsoleApp3.Services
 
                 case 4:
                     ShowProductTop3Prices();
+                    break;
+
+                case 5:
+                    ShowProduct3Ranges();
                     break;
 
                 default:
@@ -222,6 +227,39 @@ namespace ConsoleApp3.Services
                 Console.WriteLine();
             }
         }
+
+        private void ShowProduct3Ranges()
+        {
+            Console.WriteLine("=== แสดงรายการสินค้าตามช่วงราคา ===\n");
+
+            // ช่วงที่ 1 : 10 - 15.99
+            Console.WriteLine(">>> ช่วงราคา 10 - 15.99");
+            var r1 = products
+                        .Where(p => p.Price >= 10 && p.Price <= 15.99)
+                        .OrderBy(p => p.Price)
+                        .ToList();
+            Show(r1);
+            Console.WriteLine();
+
+            // ช่วงที่ 2 : 16 - 16.99
+            Console.WriteLine(">>> ช่วงราคา 16 - 20.99");
+            var r2 = products
+                        .Where(p => p.Price >= 16 && p.Price <= 20.99)
+                        .OrderBy(p => p.Price)
+                        .ToList();
+            Show(r2);
+            Console.WriteLine();
+
+            // ช่วงที่ 3 : ราคา > 17
+            Console.WriteLine(">>> ช่วงราคา > 17");
+            var r3 = products
+                        .Where(p => p.Price > 17)
+                        .OrderBy(p => p.Price)
+                        .ToList();
+            Show(r3);
+            Console.WriteLine();
+        }
+
 
 
     }
