@@ -13,8 +13,9 @@ do
     Console.WriteLine("2. เพิ่มข้อมูล");
     Console.WriteLine("3. แก้ไขข้อมูล");
     Console.WriteLine("4. ลบข้อมูล");
-    Console.WriteLine("5. ออกจากโปรแกรม");
-    Console.Write("เลือกเมนู (1-5) = ");
+    Console.WriteLine("5. เรียงสินค้าแบบต่างๆ");
+    Console.WriteLine("9. ออกจากโปรแกรม");
+    Console.Write("เลือกเมนู (1-9) = ");
 
     int.TryParse(Console.ReadLine(), out choice);
     Console.WriteLine();
@@ -35,6 +36,9 @@ do
             genData.DeleteProduct();
             break;
         case 5:
+            genData.SortProduct();
+            break;
+        case 9:
             Console.WriteLine("ออกจากโปรแกรม...");
             break;
         default:
@@ -42,10 +46,10 @@ do
             break;
     }
 
-    if (choice != 5)
+    if (choice != 9)
     {
         Console.WriteLine("\nกด Enter เพื่อกลับสู่เมนู...");
         Console.ReadLine();
     }
 
-} while (choice != 5);
+} while (choice != 9);

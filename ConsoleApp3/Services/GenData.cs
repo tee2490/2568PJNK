@@ -9,14 +9,14 @@ namespace ConsoleApp3.Services
 
         public void Create()
         {
-            var N = rand.Next(10, 16);
+            var N = rand.Next(10, 30);
             products = new();
 
             for (int i = 1; i <= N; i++)
             {
                 Category category = (Category)rand.Next(Enum.GetNames(typeof(Category)).Length);
                 double price = rand.Next(10, 31) + rand.NextDouble();
-                price = Math.Round(price,2);
+                price = Math.Round(price,0);
 
                 products.Add(new Product(i, category, price));
             }
@@ -120,6 +120,107 @@ namespace ConsoleApp3.Services
 
             Console.WriteLine("ลบข้อมูลเรียบร้อย\n");
             Show(products);
+        }
+
+        public void SortProduct()
+        {
+            Console.Clear();
+            Console.WriteLine("=== เมนูจัดการข้อมูลสินค้า ===");
+            Console.WriteLine("1. เรียงราคา (มาก → น้อย)");
+            Console.WriteLine("2. จัดกลุ่มตาม Category");
+            Console.WriteLine("3. สินค้าที่มีราคาสูงที่สุด");
+            Console.WriteLine("4. แสดงรายการสินค้าที่มีราคาสูงที่สุด 3 ราคา");
+            Console.Write("เลือกเมนู (1-4): ");
+
+            int choice = int.TryParse(Console.ReadLine(), out int c) ? c : 0;
+
+            Console.WriteLine();
+
+            switch (choice)
+            {
+                case 1:
+                    SortByPriceDesc();
+                    break;
+
+                case 2:
+                    GroupByCategory();
+                    break;
+
+                case 3:
+                    ShowMaxPriceProduct();
+                    break;
+
+                case 4:
+                    ShowProductTop3Prices();
+                    break;
+
+                default:
+                    Console.WriteLine("เลือกเมนูไม่ถูกต้อง");
+                    break;
+            }
+
+            Console.WriteLine("\nกด Enter เพื่อกลับเมนู...");
+            Console.ReadLine();
+        }
+
+
+        private void SortByPriceDesc()
+        {
+            Console.WriteLine("=== เรียงราคา (มาก → น้อย) ===\n");
+
+            var result = products
+                            .OrderByDescending(p => p.Price)
+                            .ToList();
+
+            Show(result);
+        }
+
+
+        private void GroupByCategory()
+        {
+            Console.WriteLine("=== จัดกลุ่มตาม Category ===\n");
+
+            var groups = products.GroupBy(p => p.Category)
+                                 .OrderBy(g => g.Key);
+
+            foreach (var g in groups)
+            {
+                Console.WriteLine($">>> {g.Key} ({g.Count()} ชิ้น)");
+                Show(g.ToList());
+                Console.WriteLine();
+            }
+        }
+
+        private void ShowMaxPriceProduct()
+        {
+            Console.WriteLine("=== สินค้าที่มีราคาสูงที่สุด ===\n");
+
+            double maxPrice = products.Max(p => p.Price);
+
+            var result = products
+                            .Where(p => p.Price == maxPrice)
+                            .OrderBy(p => p.Id)
+                            .ToList();
+
+            Show(result);
+        }
+
+        private void ShowProductTop3Prices()
+        {
+            Console.WriteLine("=== TOP 3 ราคาแพงที่สุด (แบบจัดกลุ่ม) ===\n");
+
+            var groups = products
+                            .GroupBy(p => p.Price)
+                            .OrderByDescending(g => g.Key)
+                            .Take(3)
+                            .ToList();
+
+            foreach (var g in groups)
+            {
+                Console.WriteLine($">>> ราคา {g.Key:F2} (มี {g.Count()} รายการ)");
+                Show(g.ToList());
+                Console.WriteLine();
+            }
         }
 
 
