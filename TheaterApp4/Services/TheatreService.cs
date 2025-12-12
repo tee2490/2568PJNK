@@ -59,37 +59,33 @@ namespace TheaterApp4.Services
 
         public void Report()
         {
-            var step = 3;
-            for (int i = 0; i <= 10; i += step)
+            ReportByQuarters.Clear();
+
+            var allTickets = Theatres.SelectMany(t => t);
+
+            int quarter = 1;
+
+            for (int start = 1; start <= 12; start += 3)
             {
-                var start = i + 1;
-                var stop = i + step;
-                var tempQ = new ReportByQuarter
+                int stop = start + 2;
+
+                var inQuarter = allTickets
+                    .Where(t => t.Month >= start && t.Month <= stop)
+                    .ToList();
+
+                var report = new ReportByQuarter
                 {
-                    MonthRange = $"Month {start} - {stop}",
-                    SumNet = 0,
-                    CountMember = 0,
-                    CountGeneral = 0,
+                    MonthRange = $"Month {start} - {stop} (Q{quarter})",
+                    SumNet = inQuarter.Sum(t => t.Net),
+                    CountMember = inQuarter.Count(t => t.MemberType == SD.TypeM.member),
+                    CountGeneral = inQuarter.Count(t => t.MemberType == SD.TypeM.general),
                 };
 
-
-                foreach (var th in Theatres)
-                {
-
-                    var t = th.Where(ticket => ticket.Month >= start && ticket.Month <= stop).ToList();
-
-                    if (t.Any())
-                    {
-                        tempQ.SumNet += t.Sum(px => px.Net);
-                        tempQ.CountMember += t.Count(px => px.MemberType.Equals(SD.TypeM.member));
-                        tempQ.CountGeneral += t.Count(px => px.MemberType.Equals(SD.TypeM.general));
-                    }
-                }
-
-                ReportByQuarters.Add(tempQ);
-
+                ReportByQuarters.Add(report);
+                quarter++;
             }
         }
+
 
         public void DisplayAll()
         {
@@ -186,4 +182,23 @@ namespace TheaterApp4.Services
 
 
 
+//ถ้าต้องการดึงค่าทั้งหมดจาก Theatres ออกมาเป็น Ticket ทำอย่างไร
+//ChatGPT said:
+
+//Theatres เป็น List<List<Ticket>>
+//ถ้าต้องการดึง Ticket ทั้งหมดออกมาเป็นลิสต์เดียว วิธีที่ถูกต้องและสั้นที่สุดคือใช้ SelectMany
+
+//วิธีที่แนะนำ
+
+//List<Ticket> allTickets = Theatres.SelectMany(t => t).ToList();
+
+
+//ถ้าต้องการใช้งานทันทีโดยไม่สร้างตัวแปรใหม่
+
+//var totalCount = Theatres.SelectMany(t => t).Count();
+
+
+//หรือคำนวณยอดรวม Net
+
+//double sumNet = Theatres.SelectMany(t => t).Sum(x => x.Net);
 
