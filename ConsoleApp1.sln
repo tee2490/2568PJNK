@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheaterApp4", "TheaterApp4\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Food65App4", "Food65App4\Food65App4.csproj", "{584E0E73-A9DC-4DE5-8FF9-66EFF16F835D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Score2563", "Score2563\Score2563.csproj", "{F2025C1A-0285-4A97-8F47-64929B6921A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{584E0E73-A9DC-4DE5-8FF9-66EFF16F835D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{584E0E73-A9DC-4DE5-8FF9-66EFF16F835D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{584E0E73-A9DC-4DE5-8FF9-66EFF16F835D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2025C1A-0285-4A97-8F47-64929B6921A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2025C1A-0285-4A97-8F47-64929B6921A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2025C1A-0285-4A97-8F47-64929B6921A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2025C1A-0285-4A97-8F47-64929B6921A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
